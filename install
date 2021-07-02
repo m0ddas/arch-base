@@ -1,0 +1,45 @@
+#!/bin/bash
+# Setting up pacman.conf
+nano /etc/pacman.conf
+
+# Setting up timezone
+ln -sf /usr/share/zoneinfo/Europe/Stockholm /etc/localtime
+hwclock --systohc
+
+# Setting up locale
+echo sv_SE.UTF-8 UTF-8 >> /etc/locale.gen
+echo en_US.UTF-8 UTF-8 >> /etc/locale.gen
+locale-gen
+echo LANG=sv_SE.UTF-8 >> /etc/locale.conf
+echo KEYMAP=sv-latin1 >> /etc/vconsole.conf
+export LANG=sv_SE.UTF-8
+
+# Setting up /etc/hostname and /etc/hosts
+echo arch-laptop >> /etc/hostname
+echo 127.0.0.1	localhost >> /etc/hosts
+echo ::1		    localhost >> /etc/hosts
+echo 127.0.1.1  arch-laptop >> /etc/hosts
+echo ::1        localhost ip6-localhost ip6-loopback >> /etc/hosts
+echo ff02::1    ip6-allnodes >> /etc/hosts
+echo ff02::2    ip6-allrouters >> /etc/hosts
+nano /etc/hosts
+
+# Starting installation
+pacman -Syy
+pacman-key --populate archlinux
+passwd
+
+# Installing Base applications
+pacman -S --noconfirm grub efibootmgrm iwd networkmanager fish git sudo
+
+# Preparing boot partition and installing grub
+mkdir /boot/efi
+mount /dev/nvme0n1p1 /boot/efi
+grub-install --target=x86_64-efi --bootloader-id=Arch --efi-directory=/boot/efi
+grub-mkconfig -o /boot/grub/grub.cfg
+
+# Enabling Services and adding users
+systemctl enable NetworkManager
+useradd -m modda
+passwd modda
+EDITOR=nano visudo
