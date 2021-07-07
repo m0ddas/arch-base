@@ -1,27 +1,31 @@
 
 #!/bin/bash
-# Formatting drives and setting up swap
-mkfs.fat -F32 /dev/nvme0n1p1
-mkswap /dev/nvme0n1p2
-swapon /dev/nvme0n1p2
-mkfs.ext4 /dev/nvme0n1p3
-mkfs.ext4 /dev/nvme1n1p1
+# Formatting drives
+mkfs.fat -F32 /dev/nvme0n1p1 !/dev/sda1 !/dev/vda1 
+mkfs.ext4 /dev/nvme0n1p3 !/dev/sda3 !/dev/vda3
+mkfs.ext4 /dev/nvme1n1p1 !/dev/sdb1 !/dev/vdb1
 
-# Mounting root partition and home folder
-mount /dev/nvme0n1p3 /mnt
+# Creating swap partition and setting up swapspace
+mkswap /dev/nvme0n1p2 !/dev/sda2 !/dev/vda2
+swapon /dev/nvme0n1p2 !/dev/sda2 !/dev/vda2
+
+# Mounting root partition
+mount /dev/nvme0n1p3 !/dev/sda3 !/dev/vda3 /mnt
+
+# Creating home directory and mounting partition
 mkdir /mnt/home
-mount /dev/nvme1n1p1 /mnt/home
+mount /dev/nvme1n1p1 !/dev/sdb1 !/dev/vdb1 /mnt/home
 
 # Updating pacman
 pacman -Syy
 
-# Downloading base for install
+# Downloading base packages for install
 pacstrap /mnt base base-devel linux linux-firmware nano
 
 # Generating /etc/fstab on new system
 genfstab -U /mnt >> /mnt/etc/fstab
 
-# Moving configuration files to new system
+# Moving installation files to new system
 mv install /mnt
 
 # Chroot into new system
