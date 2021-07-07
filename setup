@@ -28,5 +28,5 @@ genfstab -U /mnt >> /mnt/etc/fstab
 # Moving installation files to new system
 mv install /mnt
 
-# Chroot into new system
+# arch-chroot into new system
 arch-chroot /mnt
