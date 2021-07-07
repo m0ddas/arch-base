@@ -1,4 +1,3 @@
-
 #!/bin/bash
 # Formatting drives
 mkfs.fat -F32 /dev/nvme0n1p1 !/dev/sda1 !/dev/vda1 
