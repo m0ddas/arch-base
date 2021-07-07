@@ -26,5 +26,3 @@ mv install /mnt
 
 # Chroot into new system
 arch-chroot /mnt
-ls
-#testingasd
