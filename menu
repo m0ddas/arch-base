@@ -33,7 +33,7 @@ while [ $opt != '' ]
       case $opt in
         1) clear;
             option_picked "Option 1 Picked";
-            printf "pacman -S --needed < kde";
+            printf "pacman -S - < kde";
             show_menu;
         ;;
         2) clear;
